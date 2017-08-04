@@ -75,6 +75,7 @@ router.post('/v1/login', async (req, res) => {
       let data = {
         id: resp.dataValues.id,
         username: resp.dataValues.username,
+        email: resp.dataValues.email,
         image: resp.dataValues.image
       }
       res.header("Access-Control-Allow-Origin", "*");
@@ -183,10 +184,23 @@ router.post('/v1/createitem', async (req, res) => {
           console.log("data",data);
           sendInfo['user'] = data.dataValues.username;
           sendInfo['message'] = description;
-          helpers.sendEmail(sendInfo, res);
+          User.findOne({ 
+            where: {
+              id: acceptor.toString()
+            }
+          }).then((otherData) => {
+            sendInfo['otherUser'] = otherData.dataValues.username;
+            helpers.sendEmail(sendInfo, res);
+          }).catch((errr) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            return res.status(400);
+          })
+          
         }).catch( err=> {
-          console.log(err)
-        })
+          res.header("Access-Control-Allow-Origin", "*");
+          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+          return res.status(400);        })
         // if (sendBy === 'email') {
         // } else {
         //   console.log('inside else')

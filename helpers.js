@@ -69,9 +69,14 @@ module.exports = {
       from: process.env.RUMI_EMAIL,
       to: info.email,
       subject: 'Rūmi Item Creation',
-      text: `Hey, ${info.user} created a rumi to ${info.message}, check it out!`
-    };
+      text: `Hi ${info.otherUser},
 
+      ${info.user} has invited you to Rumi, the app that minimizes confusion and conflicts over shared resources on share at a time!
+
+      ${info.user} would like to share ${info.message} with you. Please click this link to download our app or click this link to see ${info.user} request. http://11ee7d64.ngrok.io/#/login `
+
+    };
+   
     let result = await transporter.sendMail(mailOptions, async (err, info) => {
       if (err) {
         res.status(400).end(err);
